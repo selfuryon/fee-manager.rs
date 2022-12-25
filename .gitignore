@@ -1,0 +1,9 @@
+# Nix
+.direnv
+result
+
+# Pre-commit
+.pre-commit-config.yaml
+
+# Rust
+/target
