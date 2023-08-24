@@ -5,7 +5,7 @@ pub fn get_router() -> Router {
     Router::new()
         .route("/live", get(live))
         .route("/ready", get(ready))
-        .route("/status", get(status))
+        .route("/status", get(ready))
 }
 
 #[tracing::instrument]

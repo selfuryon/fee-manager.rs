@@ -1,5 +1,5 @@
-mod routes;
 use anyhow::Result;
+use fee_manager::run;
 use std::net::TcpListener;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
@@ -7,12 +7,10 @@ use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 async fn main() -> Result<()> {
     init_tracing();
     let address = format!("127.0.0.1:{}", 3000);
-
-    let app = routes::get_app();
     let listener = TcpListener::bind(address)?;
-    let _ = axum::Server::from_tcp(listener)?
-        .serve(app.into_make_service())
-        .await;
+
+    run(listener).await?;
+
     Ok(())
 }
 
