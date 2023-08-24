@@ -5,6 +5,7 @@ pub fn get_router() -> Router {
     Router::new()
         .route("/live", get(live))
         .route("/ready", get(ready))
+        .route("/status", get(status))
 }
 
 #[tracing::instrument]
@@ -15,4 +16,9 @@ async fn live() -> impl IntoResponse {
 #[tracing::instrument]
 async fn ready() -> impl IntoResponse {
     Json(json!({ "service": "ok" }))
+}
+
+#[tracing::instrument]
+async fn status() -> impl IntoResponse {
+    todo!()
 }

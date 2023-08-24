@@ -15,6 +15,7 @@
       packages = with pkgs; [
         clang
         cargo
+        cargo-watch
         clippy
         rustc
         rustfmt
