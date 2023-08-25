@@ -1,4 +1,4 @@
-use axum::{http::StatusCode, response::IntoResponse, response::Json, routing::get, Router};
+use axum::{response::IntoResponse, response::Json, routing::get, Router};
 use serde_json::json;
 
 pub fn get_router() -> Router {
@@ -16,9 +16,4 @@ async fn live() -> impl IntoResponse {
 #[tracing::instrument]
 async fn ready() -> impl IntoResponse {
     Json(json!({ "service": "ok" }))
-}
-
-#[tracing::instrument]
-async fn status() -> impl IntoResponse {
-    todo!()
 }

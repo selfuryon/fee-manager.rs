@@ -1,5 +1,4 @@
 use fee_manager::run;
-use serde_json::json;
 use std::net::TcpListener;
 
 fn spawn_app() -> String {
