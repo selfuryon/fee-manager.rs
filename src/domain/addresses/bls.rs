@@ -6,29 +6,29 @@ use serde::Deserializer;
 use std::fmt;
 
 #[derive(PartialEq, Eq, Clone, Hash)]
-pub struct ProposerAddress(pub [u8; 48]);
+pub struct BLSPubkey(pub [u8; 48]);
 
-impl fmt::Display for ProposerAddress {
+impl fmt::Display for BLSPubkey {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let hex = format!("0x{}", hex::encode(self.0.to_vec()));
         write!(f, "{}", hex)
     }
 }
 
-impl Default for ProposerAddress {
+impl Default for BLSPubkey {
     fn default() -> Self {
         Self([0; 48])
     }
 }
 
-impl fmt::Debug for ProposerAddress {
+impl fmt::Debug for BLSPubkey {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let hex = format!("0x{}", hex::encode(self.0.to_vec()));
         write!(f, "{}", hex)
     }
 }
 
-impl Serialize for ProposerAddress {
+impl Serialize for BLSPubkey {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
@@ -38,7 +38,7 @@ impl Serialize for ProposerAddress {
     }
 }
 
-impl<'de> Deserialize<'de> for ProposerAddress {
+impl<'de> Deserialize<'de> for BLSPubkey {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'de>,
@@ -65,7 +65,7 @@ impl<'de> Deserialize<'de> for ProposerAddress {
     }
 }
 
-impl std::str::FromStr for ProposerAddress {
+impl std::str::FromStr for BLSPubkey {
     type Err = String;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -83,30 +83,30 @@ mod tests {
     use super::*;
 
     #[test]
-    fn proposer_address1() {
+    fn bls_pubkey1() {
         let body = "00".repeat(47);
         let addr_str = format!("\"0x{}01\"", body);
         let mut value = [0; 48];
         value[47] = 1;
-        let addr = ProposerAddress(value);
+        let addr = BLSPubkey(value);
 
         let serialized = serde_json::to_string(&addr).unwrap();
-        let deserialized: ProposerAddress = serde_json::from_str(&addr_str).unwrap();
+        let deserialized: BLSPubkey = serde_json::from_str(&addr_str).unwrap();
 
         assert_eq!(serialized, addr_str);
         assert_eq!(deserialized, addr);
     }
 
     #[test]
-    fn proposer_address255() {
+    fn bls_pubkey255() {
         let body = "00".repeat(46);
         let addr_str = format!("\"0x0a{}ff\"", body);
         let mut value = [0; 48];
         value[0] = 10;
         value[47] = 255;
-        let addr = ProposerAddress(value);
+        let addr = BLSPubkey(value);
         let serialized = serde_json::to_string(&addr).unwrap();
-        let deserialized: ProposerAddress = serde_json::from_str(&addr_str).unwrap();
+        let deserialized: BLSPubkey = serde_json::from_str(&addr_str).unwrap();
 
         assert_eq!(serialized, addr_str);
         assert_eq!(deserialized, addr);
@@ -114,18 +114,18 @@ mod tests {
 
     #[test]
     #[should_panic(expected = "Odd number of digits")]
-    fn proposer_address_wrong1() {
+    fn bls_pubkey_wrong1() {
         let body = "00".repeat(47);
         let addr_str = format!("\"0x{}1\"", body);
-        let _: ProposerAddress = serde_json::from_str(&addr_str).unwrap();
+        let _: BLSPubkey = serde_json::from_str(&addr_str).unwrap();
     }
 
     #[test]
     #[should_panic(expected = "Invalid string length")]
-    fn proposer_address_wrong2() {
+    fn bls_pubkey_wrong2() {
         let body = "00".repeat(47);
         let addr_str = format!("\"0x{}\"", body);
-        let _: ProposerAddress = serde_json::from_str(&addr_str).unwrap();
+        let _: BLSPubkey = serde_json::from_str(&addr_str).unwrap();
     }
 
     #[test]
@@ -133,6 +133,6 @@ mod tests {
     fn execution_address_wrong_start() {
         let body = "00".repeat(47);
         let addr_str = format!("\"{}01\"", body);
-        let _: ProposerAddress = serde_json::from_str(&addr_str).unwrap();
+        let _: BLSPubkey = serde_json::from_str(&addr_str).unwrap();
     }
 }
