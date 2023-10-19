@@ -8,11 +8,19 @@ use axum::{
 };
 
 pub fn get_router() -> Router {
-    Router::new().route("/proposer/:pubkey", get(get_proposer))
+    Router::new().route("/proposer/:pubkey", get(get_proposer).put(put_proposer))
 }
 
 #[tracing::instrument]
 async fn get_proposer(Path(pubkey): Path<BLSPubkey>) -> (StatusCode, Json<ProposerConfig>) {
     let proposer = Default::default();
     (StatusCode::OK, Json(proposer))
+}
+
+#[tracing::instrument]
+async fn put_proposer(
+    Path(pubkey): Path<BLSPubkey>,
+    Json(payload): Json<ProposerConfig>,
+) -> StatusCode {
+    StatusCode::OK
 }
