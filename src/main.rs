@@ -1,4 +1,5 @@
 use anyhow::Result;
+use fee_manager::configuration::get_configuration;
 use fee_manager::run;
 use std::net::TcpListener;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
@@ -6,7 +7,9 @@ use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 #[tokio::main]
 async fn main() -> Result<()> {
     init_tracing();
-    let address = format!("127.0.0.1:{}", 3000);
+    let config = get_configuration().expect("Failed to read configuration.");
+
+    let address = format!("127.0.0.1:{}", config.app_port);
     let listener = TcpListener::bind(address)?;
 
     run(listener).await?;
