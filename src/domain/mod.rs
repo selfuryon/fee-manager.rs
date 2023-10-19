@@ -1,2 +1,2 @@
-mod addresses;
-mod execution_config;
+pub mod addresses;
+pub mod execution_config;
