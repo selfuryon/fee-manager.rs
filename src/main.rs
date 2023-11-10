@@ -1,18 +1,26 @@
 use anyhow::Result;
-use fee_manager::configuration::get_configuration;
+use fee_manager::config::get_config;
 use fee_manager::run;
-use std::net::TcpListener;
+use sqlx::postgres::PgPoolOptions;
+use std::{net::TcpListener, time::Duration};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 #[tokio::main]
 async fn main() -> Result<()> {
     init_tracing();
-    let config = get_configuration().expect("Failed to read configuration.");
+    let config = get_config().expect("Failed to read configuration.");
+
+    let pool = PgPoolOptions::new()
+        .max_connections(5)
+        .acquire_timeout(Duration::from_secs(3))
+        .connect(&config.database.connection_string())
+        .await
+        .expect("can't connect to database");
 
     let address = format!("127.0.0.1:{}", config.app_port);
     let listener = TcpListener::bind(address)?;
 
-    run(listener).await?;
+    run(listener, pool).await?;
 
     Ok(())
 }

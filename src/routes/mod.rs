@@ -1,10 +1,11 @@
 mod health;
 mod proposer;
 use axum::Router;
+use sqlx::postgres::PgPool;
 
-pub fn get_app() -> Router {
-    let api_health = health::get_router();
-    let api_proposer = proposer::get_router();
+pub fn get_app(pool: PgPool) -> Router<()> {
+    let api_health = health::router();
+    let api_proposer = proposer::router(pool);
 
     Router::new()
         .nest("/", api_health)

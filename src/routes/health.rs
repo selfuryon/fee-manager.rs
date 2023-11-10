@@ -1,7 +1,7 @@
 use axum::{response::IntoResponse, response::Json, routing::get, Router};
 use serde_json::json;
 
-pub fn get_router() -> Router {
+pub fn router() -> Router<()> {
     Router::new()
         .route("/live", get(live))
         .route("/ready", get(ready))
